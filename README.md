@@ -29,7 +29,7 @@ Grave a BIOS versão **3.00** seguindo o guia:
 
 Após gravar a nova BIOS e fazer o **Clear CMOS**, configure as seguintes opções:
 
-- **Chipset > GFX Configuration**
+- - **Chipset > GFX Configuration > GFX Configuration**
 
   - `Integrated Graphics Controller` → `Forces`
   
