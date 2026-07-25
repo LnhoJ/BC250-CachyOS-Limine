@@ -1,4 +1,3 @@
-#!/bin/bash
 DEFAULT_PAGES=3145728
 PAGES_LIMIT=${1:-$DEFAULT_PAGES}
 LIMINE_DEFAULT="/etc/default/limine"
