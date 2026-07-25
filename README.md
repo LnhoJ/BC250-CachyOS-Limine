@@ -93,7 +93,13 @@ curl -sSLO https://raw.githubusercontent.com/redbeard1083/bc250-toolkit/main/bc2
 
 - Depois opção **`[A] Run All (1-7)`**
 
+- Digite `y` quando for solicitada a confirmação dos procedimentos e `1` quando solicitada a escolha de dependências.
+
+- Durante a configuração do arquivo `Swap`, será perguntado o tamanho do arquivo *Swap* e o valor de *Swappiness*. Escolha `32` caso tenha uma boa quantidade de armazenamento e defina o *Swappiness* como `180`.
+
 - Agora vá para a opção **`[8] Compute Units Unlock`**
+
+- Digite `unlock` quando for solicitado o reconhecimento dos riscos.
 
 - **`[1] Install umr`**
 
@@ -119,6 +125,7 @@ GPU Service       active
 Active CUs        40/40
 ZSWAP             Y  lz4 / pool 25%
 ZRAM              inactive
+Swappiness        180
 Swapfile          present
 Mitigations       off
 ZRAM (cmdline)    disabled
@@ -159,13 +166,6 @@ Execute o script ACPI Fix + Sensores:
 
 ```console
 curl -s https://raw.githubusercontent.com/Wiljapa/BC250-CachyOS/main/novoacpifix | bash
-```
-
-Instale e configure os sensores:
-
-```console
-sudo pacman -S lm_sensors
-sudo sensors-detect
 ```
 
 Reinicie:
@@ -274,7 +274,7 @@ cd bc250_smu_oc
 sudo chown -R $USER:$USER ~/bc250_smu_oc
 rm -rf bc250_smu_oc.egg-info build dist
 pipx install .
-bc250-detect --help
+sudo reboot
 ```
 
 Teste frequência e tensão com:
