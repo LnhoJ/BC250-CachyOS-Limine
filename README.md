@@ -99,7 +99,7 @@ curl -sSLO https://raw.githubusercontent.com/redbeard1083/bc250-toolkit/main/bc2
 
 - Depois opção **`[3] Edit Compute Pairs`**
 
-Use as teclas `hjkl` para navegar, `Espaço` para ativar/desativar e `a` ou `Enter` para aplicar.
+- Use as teclas `hjkl` para navegar, `Espaço` para ativar/desativar e `a` ou `Enter` para aplicar.
 
 > **Ative e aplique uma unidade por vez** enquanto executa algo pesado (ex.: FurMark) para verificar se há instabilidades em cada um dos núcleos ativados.
 
@@ -117,7 +117,7 @@ Depois de testar todos, torne a configuração permanente com:
 
 - Durante a configuração do arquivo `Swap`, será perguntado o tamanho do arquivo *Swap* e o valor de *Swappiness*. Escolha `32` caso tenha uma boa quantidade de armazenamento e defina o *Swappiness* como `180`.
 
-Reinicie e verifique status no toolkit com a opção **`[S] Status`**.
+- Reinicie e verifique status no toolkit com a opção **`[S] Status`**.
 
 Deve aparecer as seguintes linhas:
 
@@ -176,16 +176,20 @@ Reinicie:
 sudo reboot
 ```
 
-Use o comando `sensors` para verificar as leituras.
+Para verificar as leituras dos sensores:
 
-Para confirmar se o ACPI Fix está ativo, verifique o campo *CPU Freq Min* no **CoolerControl**.
+```console
+sensors
+```
 
-Comandos para instalar e habilitar o **CoolerControl**:
+Instale e habilite o **CoolerControl**:
 
 ```console
 sudo pacman -S coolercontrol
 sudo systemctl enable --now coolercontrold
 ```
+
+Para confirmar se o ACPI Fix está ativo, verifique o campo *CPU Freq Min* no **CoolerControl**.
 
 **Créditos:**
 - [Wiljapa/BC250-CachyOS](https://github.com/Wiljapa/BC250-CachyOS)
@@ -206,7 +210,7 @@ sudo systemctl stop cyan-skillfish-governor-smu
 sudo systemctl disable cyan-skillfish-governor-smu
 ```
 
-Agora e edite os seguintes parâmetros no arquivo de configuração `config.toml` na pasta `/etc/cyan-skillfish-governor-smu/`:
+Agora edite os seguintes parâmetros no arquivo de configuração `config.toml` na pasta `/etc/cyan-skillfish-governor-smu/`:
 
 ```toml
 [frequency-range]
@@ -256,21 +260,21 @@ Se alterar algum parâmetro em `config.toml` posteriormente, reinicie o serviço
 sudo systemctl restart cyan-skillfish-governor-smu
 ```
 
-> Antes de tornar permanente, execute um teste de estresse (ex.: **Superposition** em 1080p Extreme).
-
 Para tornar o governor permanente entre reinicializações:
 
 ```console
 sudo systemctl enable cyan-skillfish-governor-smu
 ```
 
-Para verificar se a tensão foi aplicada, use o **CPU-X** (aba *Gráficos*).
+> Antes de tornar permanente, execute um teste de estresse (ex.: **Superposition** em 1080p Extreme).
 
-Comando para instalar o **CPU-X**:
+Instale o **CPU-X**:
 
 ```console
 sudo pacman -S cpu-x
 ```
+
+Para confirmar se a tensão foi aplicada, verifique o campo `Tensão principal` na aba `Gráficos` do **CPU-X**.
 
 **Créditos:**
 - [filippor/cyan-skillfish-governor](https://github.com/filippor/cyan-skillfish-governor)
@@ -316,13 +320,21 @@ bc250-detect --frequency 3500 --vid 1050 -k
 
 **Teste básico de estabilidade:**
 
-- Abra duas janelas no Konsole.
+Abra duas janelas no Konsole.
 
-- Uma com `watch -n 1 "cat /proc/cpuinfo | grep MHz"`
+- Uma com:
 
-- Outra com `stress --cpu 16 --timeout 60`
+```console
+watch -n 1 "cat /proc/cpuinfo | grep MHz"
+```
 
-- Verifique se todos os núcleos mantêm o clock desejado sem instabilidades.
+- Outra com:
+
+```console
+stress --cpu 16 --timeout 60
+```
+
+Verifique se todos os núcleos mantêm o clock desejado sem instabilidades.
 
 > **Atenção:** Os testes acima servem para verificar instabilidades mais graves, ainda pode haver instabilidades em uso leve. Ajuste conforme necessário.
 
@@ -346,6 +358,7 @@ sudo systemctl enable --now bc250-smu-oc
 > **Atenção:** Mexer nos valores de VRAM pode **brickar** sua placa. Em alguns casos um **Clear CMOS** pode restaurar os valores padrões, mas não é garantido. Alterações realizadas aqui resultam em mudanças mínimas em relação aos valores padrões, com exceção do parâmetro UMA_SIZE que é útil alterar caso você não tenha gravado uma nova BIOS.
 
 #
+### Procedimento
 
 Clone o repositório e compile:
 
@@ -474,11 +487,10 @@ curl -s https://raw.githubusercontent.com/LnhoJ/BC250-CachyOS-Limine/main/ttm-pa
 bash /tmp/ttm.sh
 ```
 
-Reinicie e verifique as alterações:
+Reinicie e verifique se houve alteração:
 
 ```console
 cat /sys/module/ttm/parameters/pages_limit
-sudo dmesg | grep -i 'gtt.*memory'
 ```
 
 **Créditos:**
