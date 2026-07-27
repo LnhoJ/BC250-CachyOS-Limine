@@ -11,11 +11,13 @@ No final há uma lista de softwares úteis que podem ser usados em algumas etapa
 
 ## <p align="center"> ⚠️ Avisos Importantes </p>
 
-- **Riscos:** Algumas etapas (como a gravação da BIOS e alterações de VRAM) podem brickar sua placa, sendo necessário regravar a BIOS com ferramentas adequadas. Proceda por sua conta e risco.
+- **Riscos:** A gravação da BIOS e a etapa 7 podem brickar sua BC250 se feitas inadequadamente. Nesse caso, será necessária a regravação da BIOS com ferramentas adequadas. Proceda por sua conta e risco.
 
-- **Backup:** Salve todas as configurações originais antes de modificar qualquer parâmetro.
+- **Backup:** Salve em um arquivo de texto todos os valores originais antes de modificar qualquer parâmetro.
 
 - **Estabilidade:** Teste cada alteração exaustivamente antes de torná-la permanente.
+
+- **Com exceção da etapa 7, todas configurações feitas nas demais etapas são perdidas ao formatar.**
 
 #
 #
@@ -29,7 +31,7 @@ Grave a BIOS versão **3.00** seguindo o guia:
 
 Após gravar a nova BIOS e fazer o **Clear CMOS**, configure as seguintes opções:
 
-- - **Chipset > GFX Configuration > GFX Configuration**
+- **Chipset > GFX Configuration > GFX Configuration**
 
   - `Integrated Graphics Controller` → `Forces`
   
@@ -47,7 +49,7 @@ Após gravar a nova BIOS e fazer o **Clear CMOS**, configure as seguintes opçõ
 
 Pressione `F10` em seguida `Enter` para salvar e sair.
 
-> **Alternativa:** Se não quiser gravar a BIOS, você pode alterar as configurações acima e o parâmetro `UMA_SIZE` para `0512` seguindo a **etapa 7** (VRAM), pois é relativamente mais seguro.
+> **Alternativa:** Se não quiser gravar uma nova BIOS, você pode desabilitar o `IOMMU` na BIOS padrão e alterar apenas o parâmetro `UMA_SIZE` para `0512` seguindo a **etapa 7 (VRAM)**, pois é relativamente mais seguro.
 
 #
 #
@@ -89,21 +91,13 @@ No **Konsole**, execute:
 curl -sSLO https://raw.githubusercontent.com/redbeard1083/bc250-toolkit/main/bc250-toolkit.sh && chmod +x bc250-toolkit.sh && ./bc250-toolkit.sh
 ```
 
-- Digite 2 para escolher a opção **`[2] Initial Setup`**
-
-- Depois opção **`[A] Run All (1-7)`**
-
-- Digite `y` quando for solicitada a confirmação dos procedimentos e `1` quando solicitada a escolha de dependências.
-
-- Durante a configuração do arquivo `Swap`, será perguntado o tamanho do arquivo *Swap* e o valor de *Swappiness*. Escolha `32` caso tenha uma boa quantidade de armazenamento e defina o *Swappiness* como `180`.
-
-- Agora vá para a opção **`[8] Compute Units Unlock`**
+- Digite 8 para escolher a opção **`[8] Compute Units Unlock`**
 
 - Digite `unlock` quando for solicitado o reconhecimento dos riscos.
 
-- **`[1] Install umr`**
+- Agora vá para a opção **`[1] Install umr`**
 
-- **`[3] Edit Compute Pairs`**
+- Depois opção **`[3] Edit Compute Pairs`**
 
 Use as teclas `hjkl` para navegar, `Espaço` para ativar/desativar e `a` ou `Enter` para aplicar.
 
@@ -114,6 +108,14 @@ Depois de testar todos, torne a configuração permanente com:
 - **`[7] Install Boot Service`**
 
 - **`[6] Save Boot Profile`**
+
+- Na parte inicial do toolkit vá na opção **`[2] Initial Setup`**
+
+- **`[A] Run All (1-7)`**
+
+- Digite `y` quando for solicitada a confirmação dos procedimentos e `1` quando solicitada a escolha de dependências.
+
+- Durante a configuração do arquivo `Swap`, será perguntado o tamanho do arquivo *Swap* e o valor de *Swappiness*. Escolha `32` caso tenha uma boa quantidade de armazenamento e defina o *Swappiness* como `180`.
 
 Reinicie e verifique status no toolkit com a opção **`[S] Status`**.
 
@@ -177,6 +179,13 @@ sudo reboot
 Use o comando `sensors` para verificar as leituras.
 
 Para confirmar se o ACPI Fix está ativo, verifique o campo *CPU Freq Min* no **CoolerControl**.
+
+Comandos para instalar e habilitar o **CoolerControl**:
+
+```console
+sudo pacman -S coolercontrol
+sudo systemctl enable --now coolercontrold
+```
 
 **Créditos:**
 - [Wiljapa/BC250-CachyOS](https://github.com/Wiljapa/BC250-CachyOS)
@@ -247,7 +256,7 @@ Se alterar algum parâmetro em `config.toml` posteriormente, reinicie o serviço
 sudo systemctl restart cyan-skillfish-governor-smu
 ```
 
-> Antes de tornar permanente, execute um teste de estresse (ex.: **Superposition em 1080p Extreme**).
+> Antes de tornar permanente, execute um teste de estresse (ex.: **Superposition** em 1080p Extreme).
 
 Para tornar o governor permanente entre reinicializações:
 
@@ -256,6 +265,12 @@ sudo systemctl enable cyan-skillfish-governor-smu
 ```
 
 Para verificar se a tensão foi aplicada, use o **CPU-X** (aba *Gráficos*).
+
+Comando para instalar o **CPU-X**:
+
+```console
+sudo pacman -S cpu-x
+```
 
 **Créditos:**
 - [filippor/cyan-skillfish-governor](https://github.com/filippor/cyan-skillfish-governor)
@@ -301,15 +316,13 @@ bc250-detect --frequency 3500 --vid 1050 -k
 
 **Teste básico de estabilidade:**
 
-Abra duas janelas no Konsole:
+- Abra duas janelas no Konsole.
 
 - Uma com `watch -n 1 "cat /proc/cpuinfo | grep MHz"`
 
 - Outra com `stress --cpu 16 --timeout 60`
 
-Verifique se todos os núcleos mantêm o clock desejado sem instabilidades.
-
-Depois, rode **Superposition em 1080p Extreme**.
+- Verifique se todos os núcleos mantêm o clock desejado sem instabilidades.
 
 > **Atenção:** Os testes acima servem para verificar instabilidades mais graves, ainda pode haver instabilidades em uso leve. Ajuste conforme necessário.
 
@@ -330,7 +343,7 @@ sudo systemctl enable --now bc250-smu-oc
 
 #
 
-> **Atenção:** Mexer nos valores de VRAM pode **brickar** sua placa. Em alguns casos um Clear CMOS pode restaurar os valores padrões, mas não é garantido. Alterações realizadas aqui resultam em mudanças mínimas em relação aos valores padrões, com exceção do parâmetro UMA_SIZE que é útil alterar caso você não tenha gravado uma nova BIOS.
+> **Atenção:** Mexer nos valores de VRAM pode **brickar** sua placa. Em alguns casos um **Clear CMOS** pode restaurar os valores padrões, mas não é garantido. Alterações realizadas aqui resultam em mudanças mínimas em relação aos valores padrões, com exceção do parâmetro UMA_SIZE que é útil alterar caso você não tenha gravado uma nova BIOS.
 
 #
 
@@ -343,7 +356,7 @@ make
 sudo ./bc250memcfg
 ```
 
-**Salve a saída padrão** em um arquivo de texto – ela se parece com:
+Salve os valores dos parâmetros em um arquivo de texto para futuras reversões. A lista de parâmetros se parece com:
 
 <pre>
 ClockSpeed=1750
@@ -381,7 +394,7 @@ Exemplo:
 sudo ./bc250memcfg UMA_SIZE 0512
 ```
 
-Verifique os valores setados em:
+Verifique os novos valores setados:
 
 ```console
 sudo ./bc250memcfg
@@ -438,7 +451,7 @@ Uma solução mais eficiente consiste em manter `UMA_SIZE=512` e alterar o valor
 
 ### Procedimento
 
-Veja o valor atual (e salve-o como backup):
+Veja o valor atual de `ttm.pages_limit` e salve-o para futuras reversões:
 
 ```console
 cat /sys/module/ttm/parameters/pages_limit
@@ -498,19 +511,6 @@ flatpak install flathub com.geeks3d.furmark
 ```console
 yay -S unigine-superposition
 sudo chmod -R a+rX /opt/unigine-superposition
-```
-
-### CoolerControl
-
-```console
-sudo pacman -S coolercontrol
-sudo systemctl enable --now coolercontrold
-```
-
-### CPU-X
-
-```console
-sudo pacman -S cpu-x
 ```
 
 ### Helium Browser (navegador):
