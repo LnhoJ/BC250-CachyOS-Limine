@@ -91,11 +91,15 @@ No **Konsole**, execute:
 curl -sSLO https://raw.githubusercontent.com/redbeard1083/bc250-toolkit/main/bc250-toolkit.sh && chmod +x bc250-toolkit.sh && ./bc250-toolkit.sh
 ```
 
-- Digite 8 para escolher a opção **`[8] Compute Units Unlock`**
+- Digite 2 para escolher a opção **`[2] Initial Setup`**
+
+- Agora vá na opção **`[8] Compute Units Unlock`**
 
 - Digite `unlock` quando for solicitado o reconhecimento dos riscos.
 
-- Agora vá para a opção **`[1] Install umr`**
+- Opção **`[1] Install umr`**
+
+- Digite `y` quando for solicitada a confirmação dos procedimentos e `1` quando solicitada a escolha de dependências.
 
 - Depois opção **`[3] Edit Compute Pairs`**
 
@@ -109,11 +113,7 @@ Depois de testar todos, torne a configuração permanente com:
 
 - **`[6] Save Boot Profile`**
 
-- Na parte inicial do toolkit vá na opção **`[2] Initial Setup`**
-
-- **`[A] Run All (1-7)`**
-
-- Digite `y` quando for solicitada a confirmação dos procedimentos e `1` quando solicitada a escolha de dependências.
+- Retorne com `0` e vá na opção **`[A] Run All (1-7)`**
 
 - Durante a configuração do arquivo `Swap`, será perguntado o tamanho do arquivo *Swap* e o valor de *Swappiness*. Escolha `32` caso tenha uma boa quantidade de armazenamento e defina o *Swappiness* como `180`.
 
