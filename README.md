@@ -189,6 +189,8 @@ sudo pacman -S coolercontrol
 sudo systemctl enable --now coolercontrold
 ```
 
+> Desabilite os sensores que não estão em uso no **CoolerControl**.
+
 Para confirmar se o ACPI Fix está ativo, verifique o campo *CPU Freq Min* no **CoolerControl**.
 
 **Créditos:**
