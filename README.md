@@ -11,7 +11,7 @@ No final há uma lista de softwares úteis que podem ser usados em algumas etapa
 
 ## <p align="center"> ⚠️ Avisos Importantes </p>
 
-- **Riscos:** A gravação da BIOS e a etapa [7]([#-7-vram-](https://github.com/LnhoJ/BC250-CachyOS-Limine#-7-vram-)] podem brickar sua BC250 se feitas inadequadamente. Nesse caso, será necessária a regravação da BIOS com ferramentas adequadas. Proceda por sua conta e risco.
+- **Riscos:** A gravação da BIOS e a etapa [#-7-vram-](#-7-vram-) podem brickar sua BC250 se feitas inadequadamente. Nesse caso, será necessária a regravação da BIOS com ferramentas adequadas. Proceda por sua conta e risco.
 
 - **Backup:** Salve em um arquivo de texto todos os valores originais antes de modificar qualquer parâmetro.
 
