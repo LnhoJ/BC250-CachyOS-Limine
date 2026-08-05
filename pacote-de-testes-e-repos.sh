@@ -213,55 +213,54 @@ sep "Unigine Superposition"
 if [ -d "/opt/unigine-superposition" ] || command -v superposition &>/dev/null; then
     ok "Superposition já instalado – pulando"
 else
-fi
-info "Instalando dependências de compilação..."
-pacman -S --needed --noconfirm cmake gcc make mesa mesa-utils opencl-headers > /dev/null 2>&1 &
-spinner $!
-wait $! || warn "Algumas dependências opcionais podem estar faltando"
+    info "Instalando dependências de compilação..."
+    pacman -S --needed --noconfirm cmake gcc make mesa mesa-utils opencl-headers > /dev/null 2>&1 &
+    spinner $!
+    wait $! || warn "Algumas dependências opcionais podem estar faltando"
 
-if ! check_opt_space; then
-    err "Espaço insuficiente em /opt (necessário ~2 GB)."
-    warn "Libere espaço e tente novamente."
-    mark_fail superposition
-else
-    BUILD_DIR=$(choose_build_dir)
-    if [[ -z "$BUILD_DIR" ]]; then
-        warn "Nenhum diretório com 4 GB livres. Tentando limpeza..."
-        clean_tmp
-        BUILD_DIR=$(choose_build_dir)
-    fi
-    if [[ -n "$BUILD_DIR" ]]; then
-        BUILD_DIR="$BUILD_DIR/superposition-build"
-        mkdir -p "$BUILD_DIR"
-        chown "$ORIGINAL_USER:" "$BUILD_DIR"
-        info "Usando diretório de build: $BUILD_DIR"
-        info "Instalando Superposition..."
-        as_user env TMPDIR="$BUILD_DIR" yay -S --noconfirm --builddir "$BUILD_DIR" unigine-superposition > /tmp/superposition_stdout.log 2> /tmp/superposition_stderr.log &
-        spinner $!
-        if wait $!; then
-            ok "Superposition instalado"
-            chmod -R a+rX /opt/unigine-superposition
-        else
-            err "Falha ao instalar Superposition."
-            echo -e "  ${red}--- Últimas 20 linhas do erro ---${reset}"
-            tail -n 20 /tmp/superposition_stderr.log | sed 's/^/    /'
-            echo -e "  ${red}--- Fim do erro ---${reset}"
-            if grep -q "No space left on device" /tmp/superposition_stderr.log; then
-                warn "Erro de espaço em disco. Verifique /tmp e /opt."
-                warn "Execute: df -h e libere espaço."
-            fi
-            mark_fail superposition
-            warn "Tente instalar manualmente: yay -S unigine-superposition"
-            warn "Ou baixe o binário em: https://benchmark.unigine.com/superposition"
-        fi
-        rm -rf "$BUILD_DIR" 2>/dev/null || true
-    else
-        err "Espaço insuficiente mesmo após limpeza."
+    if ! check_opt_space; then
+        err "Espaço insuficiente em /opt (necessário ~2 GB)."
+        warn "Libere espaço e tente novamente."
         mark_fail superposition
-        warn "Reinicie o sistema para limpar /tmp ou use um diretório com mais espaço."
+    else
+        BUILD_DIR=$(choose_build_dir)
+        if [[ -z "$BUILD_DIR" ]]; then
+            warn "Nenhum diretório com 4 GB livres. Tentando limpeza..."
+            clean_tmp
+            BUILD_DIR=$(choose_build_dir)
+        fi
+        if [[ -n "$BUILD_DIR" ]]; then
+            BUILD_DIR="$BUILD_DIR/superposition-build"
+            mkdir -p "$BUILD_DIR"
+            chown "$ORIGINAL_USER:" "$BUILD_DIR"
+            info "Usando diretório de build: $BUILD_DIR"
+            info "Instalando Superposition..."
+            as_user env TMPDIR="$BUILD_DIR" yay -S --noconfirm --builddir "$BUILD_DIR" unigine-superposition > /tmp/superposition_stdout.log 2> /tmp/superposition_stderr.log &
+            spinner $!
+            if wait $!; then
+                ok "Superposition instalado"
+                chmod -R a+rX /opt/unigine-superposition
+            else
+                err "Falha ao instalar Superposition."
+                echo -e "  ${red}--- Últimas 20 linhas do erro ---${reset}"
+                tail -n 20 /tmp/superposition_stderr.log | sed 's/^/    /'
+                echo -e "  ${red}--- Fim do erro ---${reset}"
+                if grep -q "No space left on device" /tmp/superposition_stderr.log; then
+                    warn "Erro de espaço em disco. Verifique /tmp e /opt."
+                    warn "Execute: df -h e libere espaço."
+                fi
+                mark_fail superposition
+                warn "Tente instalar manualmente: yay -S unigine-superposition"
+                warn "Ou baixe o binário em: https://benchmark.unigine.com/superposition"
+            fi
+            rm -rf "$BUILD_DIR" 2>/dev/null || true
+        else
+            err "Espaço insuficiente mesmo após limpeza."
+            mark_fail superposition
+            warn "Reinicie o sistema para limpar /tmp ou use um diretório com mais espaço."
+        fi
     fi
 fi
-
 sep "CPU-X"
 pacman -S --noconfirm cpu-x > /dev/null 2>&1 &
 spinner $!
