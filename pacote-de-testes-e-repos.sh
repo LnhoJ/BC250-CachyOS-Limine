@@ -1,14 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-# ───────────────────────────────────────────────────────────────────────
 if [[ $EUID -ne 0 ]]; then
     exec sudo "$0" "$@"
 fi
 
 ORIGINAL_USER="${SUDO_USER:-$USER}"
 
-# ────────────────────────────────────────────────────────────────────────
 if [[ -n "${SUDO_USER:-}" ]]; then
     SUDOERS_FILE="/etc/sudoers.d/temp_install_$$"
     echo "$ORIGINAL_USER ALL=(ALL) NOPASSWD: ALL" > "$SUDOERS_FILE"
@@ -16,12 +14,10 @@ if [[ -n "${SUDO_USER:-}" ]]; then
     trap 'rm -f "$SUDOERS_FILE"' EXIT
 fi
 
-# ────────────────────────────────────────────────────────────────────────
 as_user() {
     runuser -u "$ORIGINAL_USER" -- "$@"
 }
 
-# ────────────────────────────────────────────────────────────────────────
 if [[ -t 1 ]] && command -v tput &>/dev/null; then
     bold=$(tput bold)
     green=$(tput setaf 2)
@@ -87,7 +83,6 @@ STATUS[coolercontrol]=true
 
 mark_fail() { STATUS["$1"]=false; }
 
-# ────────────────────────────────────────────────────────────────
 choose_build_dir() {
     local candidates=("/home/$ORIGINAL_USER/tmp" "/var/tmp" "/tmp")
     local selected=""
@@ -102,31 +97,24 @@ choose_build_dir() {
     echo "$selected"
 }
 
-# ────────────────────────────────────────────────────────────────────
 check_opt_space() {
     local needed_kb=$((2 * 1024 * 1024))
     local avail=$(df --output=avail /opt | tail -n1)
     (( avail >= needed_kb ))
 }
 
-# ──────────────────────────────────────────────────────────────────────
 clean_tmp() {
     info "Limpando /tmp (arquivos com mais de 1 dia)..."
-    # Remove arquivos regulares com mais de 1 dia
     find /tmp -type f -atime +1 -delete 2>/dev/null || true
-    # Remove diretórios vazios
     find /tmp -type d -empty -delete 2>/dev/null || true
-    # Remove arquivos de cache do pacman (se houver)
     rm -rf /tmp/pacman-* 2>/dev/null || true
     ok "Limpeza concluída."
 }
 
-# ────────────────────────────────────────────────────────────────────────
 tmp_avail=$(df --output=avail /tmp | tail -n1)
 if (( tmp_avail < 1048576 )); then
     warn "/tmp está com menos de 1 GB livre. Tentando limpeza automática..."
     clean_tmp
-    # Reavalia
     tmp_avail=$(df --output=avail /tmp | tail -n1)
     if (( tmp_avail < 1048576 )); then
         err "Ainda não há espaço suficiente em /tmp. Recomenda-se reiniciar o sistema para limpar /tmp."
@@ -135,7 +123,6 @@ if (( tmp_avail < 1048576 )); then
     fi
 fi
 
-# ────────────────────────────────────────────────────────────────────────────────
 header "Preparação de repositórios e dependências"
 
 sep "Flatpak"
@@ -212,7 +199,6 @@ else
     ok "Paru já instalado"
 fi
 
-# ────────────────────────────────────────────────────────────────────────────────
 header "Instalação das ferramentas de teste"
 
 sep "FurMark"
@@ -224,19 +210,19 @@ else
 fi
 
 sep "Unigine Superposition"
-# Dependências
+if [ -d "/opt/unigine-superposition" ] || command -v superposition &>/dev/null; then
+    ok "Superposition já instalado – pulando"
+else
 info "Instalando dependências de compilação..."
 pacman -S --needed --noconfirm cmake gcc make mesa mesa-utils opencl-headers > /dev/null 2>&1 &
 spinner $!
 wait $! || warn "Algumas dependências opcionais podem estar faltando"
 
-# Verifica espaço em /opt
 if ! check_opt_space; then
     err "Espaço insuficiente em /opt (necessário ~2 GB)."
     warn "Libere espaço e tente novamente."
     mark_fail superposition
 else
-    # Escolhe diretório de build
     BUILD_DIR=$(choose_build_dir)
     if [[ -z "$BUILD_DIR" ]]; then
         warn "Nenhum diretório com 4 GB livres. Tentando limpeza..."
@@ -249,7 +235,6 @@ else
         chown "$ORIGINAL_USER:" "$BUILD_DIR"
         info "Usando diretório de build: $BUILD_DIR"
         info "Instalando Superposition..."
-        # Define TMPDIR para o diretório de build (força o instalador a usar esse dir)
         as_user env TMPDIR="$BUILD_DIR" yay -S --noconfirm --builddir "$BUILD_DIR" unigine-superposition > /tmp/superposition_stdout.log 2> /tmp/superposition_stderr.log &
         spinner $!
         if wait $!; then
@@ -304,7 +289,6 @@ else
     warn "Não foi possível ativar o serviço"
 fi
 
-# ────────────────────────────────────────────────────────────────────────────────────
 echo ""
 printf "  ${bold}${green}+"
 printf '%*s' $((QUADRO_WIDTH-2)) '' | tr ' ' '-'
