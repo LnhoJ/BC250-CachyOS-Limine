@@ -213,6 +213,7 @@ sep "Unigine Superposition"
 if [ -d "/opt/unigine-superposition" ] || command -v superposition &>/dev/null; then
     ok "Superposition já instalado – pulando"
 else
+fi
 info "Instalando dependências de compilação..."
 pacman -S --needed --noconfirm cmake gcc make mesa mesa-utils opencl-headers > /dev/null 2>&1 &
 spinner $!
