@@ -325,23 +325,40 @@ else
 fi
 
 MKINITCPIO_CONF="/etc/mkinitcpio.conf"
+ACPI_APLICADO="não"
 if [[ -f "$MKINITCPIO_CONF" ]]; then
     subheader "Initramfs e ACPI overrides"
     add_module() { grep -q "$1" "$MKINITCPIO_CONF" || sed -i "s/^MODULES=(\(.*\))/MODULES=(\1 $1)/" "$MKINITCPIO_CONF"; }
     add_module "lz4"
     add_module "lz4_compress"
-    mkdir -p /etc/initcpio/acpi_override/
-    info "Baixando tabelas ACPI (CST e PST)..."
-    {
-        curl -sL -o /etc/initcpio/acpi_override/SSDT-CST.aml \
-            "https://github.com/mendesrr/bc250-acpi-fix-updated-8c/raw/refs/heads/main/SSDT-CST.aml"
-        curl -sL -o /etc/initcpio/acpi_override/SSDT-PST.aml \
-            "https://github.com/mendesrr/bc250-acpi-fix-updated-8c/raw/refs/heads/main/SSDT-PST.aml"
-    } >/dev/null 2>&1 &
-    spinner $!
-    if ! grep -q 'acpi_override' "$MKINITCPIO_CONF"; then
-        sed -i '/^HOOKS=/ { /acpi_override/q; s/microcode/& acpi_override/; q }' "$MKINITCPIO_CONF"
+
+    echo ""
+    echo -e "  ${bold}${yellow}AVISO SOBRE O ACPI FIX${reset}"
+    echo -e "  Este script pode aplicar correções nas tabelas ACPI (SSDT-CST e SSDT-PST)"
+    echo -e "  para melhorar suporte a suspensão, economia de energia e estabilidade."
+    echo -e "  ${bold}Se você já gravou a nova BIOS (com as correções integradas),${reset}"
+    echo -e "  ${bold}${green}não é necessário aplicar este fix, pois as tabelas já estão inclusas.${reset}"
+    echo ""
+    read -p "  ${cyan}?${reset}  Deseja aplicar o ACPI fix? (s/N): " aplicar_acpi
+    if [[ "$aplicar_acpi" =~ ^[Ss]$ ]]; then
+        mkdir -p /etc/initcpio/acpi_override/
+        info "Baixando tabelas ACPI (CST e PST)..."
+        {
+            curl -sL -o /etc/initcpio/acpi_override/SSDT-CST.aml \
+                "https://github.com/mendesrr/bc250-acpi-fix-updated-8c/raw/refs/heads/main/SSDT-CST.aml"
+            curl -sL -o /etc/initcpio/acpi_override/SSDT-PST.aml \
+                "https://github.com/mendesrr/bc250-acpi-fix-updated-8c/raw/refs/heads/main/SSDT-PST.aml"
+        } >/dev/null 2>&1 &
+        spinner $!
+        if ! grep -q 'acpi_override' "$MKINITCPIO_CONF"; then
+            sed -i '/^HOOKS=/ { /acpi_override/q; s/microcode/& acpi_override/; q }' "$MKINITCPIO_CONF"
+        fi
+        ACPI_APLICADO="sim"
+        ok "ACPI fix aplicado (CST + PST)"
+    else
+        warn "ACPI fix não será aplicado"
     fi
+
     info "Regenerando initramfs..."
     if command -v limine-mkinitcpio &>/dev/null; then
         limine-mkinitcpio >/dev/null 2>&1 &
@@ -354,7 +371,7 @@ if [[ -f "$MKINITCPIO_CONF" ]]; then
         limine-update >/dev/null 2>&1 &
         spinner $!
     fi
-    ok "Initramfs reconstruido com ACPI overrides"
+    ok "Initramfs reconstruido"
 fi
 
 header "Configuração dos CUs"
@@ -414,8 +431,8 @@ print_quadro_line "UMA_SIZE              : 512 MB"
 print_quadro_line "TTM pages limit       : 12 GB (3145728)"
 print_quadro_line "Mitigações e RDSeed   : desativados"
 print_quadro_line "ZSWAP                 : ativado (lz4, 25%)"
-print_quadro_line "ACPI Fix              : CST + PST aplicados"
-print_quadro_line "CUs liberados         : $CU_STATUS"
+print_quadro_line "ACPI Fix              : ${ACPI_APLICADO}"
+print_quadro_line "CUs liberados         : ${CU_STATUS}"
 printf "  ${bold}${green}+"
 printf '%*s' $((QUADRO_WIDTH-2)) '' | tr ' ' '-'
 printf "+${reset}\n"
