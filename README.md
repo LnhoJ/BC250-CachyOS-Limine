@@ -596,7 +596,7 @@ Deixe rodar por cerca de 5 minutos ou até a mensagem de conclusão. Pressione `
 
 - Thiago Mesquita, por ter criado o tutorial em PDF para Bazzite, que é inclusive a inspiração para criação deste tutorial com CachyOS.
 
-- **Recomendo pessoalmente** os tutoriais da **Renata**, ela fez um trabalho excelente, com um guia detalhado e muito bem explicado, tanto em texto no [GitHub](https://github.com/renatas1m03s/CachyOS-on-BC250) quanto em vídeo no [YouTube](https://www.youtube.com/watch?v=wMqUmxJdXNo) sobre todas as adaptações no CachyOS.
+- **Recomendo pessoalmente** os tutoriais da **Renata**, ela fez um trabalho excelente, com um guia detalhado e muito bem explicado, tanto em texto no [GitHub](https://github.com/renatas1m03s/CachyOS-on-BC250) quanto em vídeo no [YouTube](https://www.youtube.com/watch?v=wMqUmxJdXNo) sobre as adaptações no CachyOS.
 
 #
 #
