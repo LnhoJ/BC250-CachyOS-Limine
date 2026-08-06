@@ -330,7 +330,7 @@ Abaixo estão apenas dois, pois o terceiro envolve a criação de um serviço no
 
 **Primeiro Método:**
 
-O primeiro método cria uma entrada na BIOS para que esse app seja executado antes do sistema operacional, e depois ele carrega o Linux normalmente.
+O primeiro método cria uma entrada na EFI para que esse app seja executado antes do sistema operacional, e depois ele carrega o Linux normalmente.
 
 Rode o comando:
 
