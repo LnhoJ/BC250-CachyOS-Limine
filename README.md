@@ -332,6 +332,8 @@ Abaixo estão apenas dois, pois o terceiro envolve a criação de um serviço no
 
 O primeiro método cria uma entrada na EFI para que esse app seja executado antes do sistema operacional, e depois ele carrega o Linux normalmente.
 
+Essa é a melhor opção caso não queira gravar uma nova BIOS. O tempo de inicialização aumenta em +5s com o método da BIOS e +11s com o método EFI, uma diferença mínima.
+
 Rode o comando:
 
 ```console
@@ -563,6 +565,16 @@ Deixe rodar por cerca de 5 minutos ou até a mensagem de conclusão. Pressione `
 ## <p align="center"> Agradecimentos e Créditos </p>
 
 #
+
+- [rw-r-r-0644/bc250-core-unlock](https://github.com/rw-r-r-0644/bc250-core-unlock)
+
+- [Hexxeh/bc250-efi-core-unlock](https://github.com/Hexxeh/bc250-efi-core-unlock)
+
+- [Thread Discord - Gadget](https://discord.com/channels/1315924807128449065/1532700437147418807)
+
+- [Forbidden-Darkness/AMD-BC-250-UEFI-v2.2-Firmware-Menu-Script](https://github.com/Forbidden-Darkness/AMD-BC-250-UEFI-v2.2-Firmware-Menu-Script/)
+
+- [MastaG/linux-cachyos-bc250](https://github.com/MastaG/linux-cachyos-bc250)
 
 - [mendesrr/bc250-acpi-fix-updated-8c](https://github.com/mendesrr/bc250-acpi-fix-updated-8c)
 
