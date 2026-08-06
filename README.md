@@ -56,7 +56,7 @@ chmod +x /tmp/configs-bc-250.sh
 sudo /tmp/configs-bc-250.sh
 ```
 
-Haverá pedido de confirmação para o ACPI Fix, pois caso tenha feito gravação da nova bios não é necessário aplicar ele.
+Haverá pedido de confirmação para o ACPI Fix, pois caso tenha feito gravação da nova BIOS com ACPI Fix incluso não é necessário aplicar ele.
 
 Esse script desbloqueia todas as 40 CUs sem exceção, portanto, no final do script será perguntado se deseja manter o desbloqueio permanente das 40 CUs, ou seja, uma alteração persistente entre reinicializações. Teste antes de confirmar, pois, caso ocorra alguma instabilidade a ponto de ser necessário desligar a BC-250, você não terá uma configuração instável persistente ao religar sua máquina.
 
